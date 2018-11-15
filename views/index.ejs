@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>메인</title>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-9623253772764794",
+    enable_page_level_ads: true
+  });
+</script>
+
+</head>
+
+<body>
+    <h1>환영합니다.</h1>
+
+    <form action="/signin" method="post">
+        <div>
+            <label>Username:</label>
+            <input type="text" name="user_id" />
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password" />
+        </div>
+
+        <button type="submit">로그인</button>
+    </form>
+
+    <form action="/signup" method="post">
+        <button type="submit">회원가입</button>
+    </form>
+    <% if (message.length > 0) { %>
+        <div class="alert alert-warning" role="alert">
+            <strong><%= message %></strong>
+        </div>
+        <% } %>
+</body>
+
+</html>

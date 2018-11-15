@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>채팅방</title>
+
+    <style>
+        #root {
+            margin: auto;
+        }
+
+        .chat_log {
+            width: 70%;
+            height: 200px;
+            border: 1px solid gold;
+            float: left;
+            overflow: scroll;
+        }
+
+        #login {
+            width: 20%;
+            height: 205px;
+            border: 1px solid gold;
+            float: left;
+            overflow: scroll;
+        }
+
+        .name {
+            width: 10%;
+        }
+
+        .message {
+            width: 70%;
+        }
+
+        .chat {
+            width: 10%;
+
+    </style>
+       
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-9623253772764794",
+    enable_page_level_ads: true
+  });
+</script>
+
+</head>
+
+<body>
+    <div id="root">
+        <div id="chatLog" class="chat_log" readonly></div>
+        <div id="login">
+            <div align='center'>현재 접속중인 인원</div>
+            <div id='people'></div>
+        </div>
+        <form id="chat">
+            <input id="name" class="name" type="text" value="<%= name %>" readonly>
+            <input id="message" class="message" type="text">
+            <input type="submit" class="chat" value="chat">
+        </form>
+        <form action='/logout'>
+            <button type="submit">로그아웃</button>
+        </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        var socket = io();
+        socket.on('connection', function(data) {
+            if (data.type == 'deconnection') {
+                socket.emit('connection', {
+                    type: 'connection',
+                    name: "<%= name %>"
+                });
+            }
+        });
+
+
+        $('#chat').on('submit', function(e) {
+            socket.emit('send message', $('#name').val(), $('#message').val());
+            $('#message').val("");
+            e.preventDefault();
+        });
+        socket.on('system', function(data) {
+            $('#chatLog').append('<br>' + data.msg);
+            $('#chatLog').scrollTop($("#chatLog")[0].scrollHeight);
+        });
+
+        socket.on('leadfile', function(data) {
+            for (i in data) {
+                if ((data.length - 10) < i) {
+                    $('#chatLog').append(data[i] + '<br>');
+                }
+            };
+        });
+
+        socket.on('receive message', function(msg) {
+            $('#chatLog').append('<br>' + msg);
+            $('#chatLog').scrollTop($("#chatLog")[0].scrollHeight);
+        });
+
+        socket.on('people', function(data) {
+            console.log('동작');
+            console.log(data[0]);
+            $('#people').empty();
+            for (var i = 0; i < data.length; i++) {
+                $('#people').append(data[i] + '<br>');
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
